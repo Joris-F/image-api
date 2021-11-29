@@ -10,7 +10,7 @@ services:
       - '8000:80'
     volumes:
       - ./:/var/www/html
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./etc/artifact/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - php
 
@@ -22,7 +22,7 @@ services:
   #php
   php:
     build:
-      context: ./dockerfiles
+      context: etc/artifact/dockerfiles
       dockerfile: php.dockerfile
     container_name: php_nutrifood
     volumes:
@@ -31,7 +31,7 @@ services:
   #composer
   composer:
     build:
-      context: ./dockerfiles
+      context: etc/artifact/dockerfiles
       dockerfile: composer.dockerfile
     container_name: composer_nutrifood
     volumes:
@@ -40,7 +40,7 @@ services:
   #symfony
   symfony:
     build:
-      context: ./dockerfiles
+      context: etc/artifact/dockerfiles
       dockerfile: symfony.dockerfile
     container_name: symfony_nutrifood
     volumes:
@@ -50,9 +50,11 @@ services:
   mysql:
     image: mysql:8.0
     container_name: mysql_nutrifood
-    env_file:
-      - ./env/mysql.env
-
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
   #GUI pour base de donnée
   #phpmyadmin
@@ -61,7 +63,9 @@ services:
     container_name: phpmyadmin_nutrifood
     ports:
       - '8080:80'
-    env_file:
-      - ./env/phpmyadmin.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_HOST: mysql
+      PMA_PORT: 3306
     depends_on:
       - mysql

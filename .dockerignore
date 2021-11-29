@@ -1,6 +1,6 @@
 nginx/
 env/
-dockerfiles/
+etc/artifact/dockerfiles/
 .idea
 README.md
 docker-compose*
