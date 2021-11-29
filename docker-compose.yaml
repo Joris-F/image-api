@@ -5,7 +5,7 @@ services:
   #nginx
   server:
     image: 'nginx:stable-alpine'
-    container_name: nginx_server
+    container_name: server_nutrifood
     ports:
       - '8000:80'
     volumes:
@@ -17,14 +17,14 @@ services:
   #node
   npm:
     image: node:14
-    container_name: node_cli
+    container_name: node_nutrifood
 
   #php
   php:
     build:
       context: ./dockerfiles
       dockerfile: php.dockerfile
-    container_name: php-8.0.9
+    container_name: php_nutrifood
     volumes:
       - ./:/var/www/html
 
@@ -33,7 +33,7 @@ services:
     build:
       context: ./dockerfiles
       dockerfile: composer.dockerfile
-    container_name: composer_cli
+    container_name: composer_nutrifood
     volumes:
       - ./:/var/www/html
 
@@ -42,26 +42,14 @@ services:
     build:
       context: ./dockerfiles
       dockerfile: symfony.dockerfile
-    container_name: symfony_cli
+    container_name: symfony_nutrifood
     volumes:
       - ./:/var/www/html
-
-  #vuejs
-
-  #redis
-  #elasticsearch
-  #rabbitmq
-  #postgresql
-  postgresql:
-    image: postgres
-    container_name: postgres_db
-    env_file:
-      - ./env/postgres.env
 
   #mysql
   mysql:
     image: mysql:8.0
-    container_name: mysql_db
+    container_name: mysql_nutrifood
     env_file:
       - ./env/mysql.env
 
@@ -70,31 +58,10 @@ services:
   #phpmyadmin
   phpmyadmin:
     image: phpmyadmin
-    container_name: phpmyadmin_gui
+    container_name: phpmyadmin_nutrifood
     ports:
       - '8080:80'
     env_file:
       - ./env/phpmyadmin.env
     depends_on:
       - mysql
-
-  #adminer
-  adminer:
-    image: adminer:4.8.1
-    container_name: postgres_gui
-    ports:
-      - '8080:8080'
-
-  #PgAdmin
-  pgadmin:
-    image: dpage/pgadmin4:5.6
-    container_name: pgadmin_gui
-    ports:
-      - '5050:80'
-    env_file:
-      - ./env/pgadmin.env
-    depends_on:
-      - postgresql
-
-
-  #système de mail
