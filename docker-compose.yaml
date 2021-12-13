@@ -5,7 +5,7 @@ services:
   #nginx
   server:
     image: 'nginx:stable-alpine'
-    container_name: server_nutrifood
+    container_name: server_sharemoumouth
     ports:
       - '8000:80'
     volumes:
@@ -24,7 +24,7 @@ services:
     build:
       context: etc/artifact/dockerfiles
       dockerfile: php.dockerfile
-    container_name: php_nutrifood
+    container_name: php_sharemoumouth
     volumes:
       - ./:/var/www/html
 
@@ -33,7 +33,7 @@ services:
     build:
       context: etc/artifact/dockerfiles
       dockerfile: composer.dockerfile
-    container_name: composer_nutrifood
+    container_name: composer_sharemoumouth
     volumes:
       - ./:/var/www/html
 
@@ -42,30 +42,28 @@ services:
     build:
       context: etc/artifact/dockerfiles
       dockerfile: symfony.dockerfile
-    container_name: symfony_nutrifood
+    container_name: symfony_sharemoumouth
     volumes:
       - ./:/var/www/html
 
-  #mysql
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_nutrifood
+  #postgresql
+  postgresql:
+    image: postgres
+    container_name: postgres_shareMoumouth
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      POSTGRES_DB: shareMoumouth
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
 
-  #GUI pour base de donnée
-  #phpmyadmin
-  phpmyadmin:
-    image: phpmyadmin
-    container_name: phpmyadmin_nutrifood
+  #PgAdmin
+  pgadmin:
+    image: dpage/pgadmin4:5.6
+    container_name: pgadmin_shareMoumouth
     ports:
-      - '8080:80'
+      - '5050:80'
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      PMA_HOST: mysql
-      PMA_PORT: 3306
+      PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_LISTEN_PORT: 80
     depends_on:
-      - mysql
+      - postgresql
